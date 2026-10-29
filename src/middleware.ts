@@ -20,7 +20,7 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // If user is trying to access /admin/login while logged in
+  // Allow access to /admin/login for unauthenticated users, or redirect to /admin if logged in
   if (pathname === "/admin/login") {
     if (isValidSession) {
       return NextResponse.redirect(new URL("/admin", request.url));
@@ -28,7 +28,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Protect all /admin routes
+  // Protect all other /admin routes
   if (pathname.startsWith("/admin")) {
     if (!isValidSession) {
       const loginUrl = new URL("/admin/login", request.url);
